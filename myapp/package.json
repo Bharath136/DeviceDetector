@@ -1,0 +1,40 @@
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@expo/webpack-config": "^19.0.0",
+    "@react-native-community/masked-view": "^0.1.11",
+    "@react-navigation/native": "^6.1.9",
+    "@react-navigation/stack": "^6.3.20",
+    "android": "^0.0.8",
+    "axios": "^1.6.3",
+    "expo": "~49.0.11",
+    "expo-status-bar": "~1.6.0",
+    "js-cookie": "^3.0.5",
+    "js-cookies": "^1.0.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.49.2",
+    "react-native": "^0.73.1",
+    "react-native-geolocation-service": "^5.3.1",
+    "react-native-gesture-handler": "^2.14.0",
+    "react-native-maps": "^1.9.1",
+    "react-native-paper": "^5.11.6",
+    "react-native-reanimated": "^3.6.1",
+    "react-native-safe-area-context": "^4.6.3",
+    "react-native-screens": "~3.22.0",
+    "react-native-web": "~0.19.6",
+    "socket.io-client": "^4.7.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0"
+  },
+  "private": true
+}
