@@ -1,45 +1,49 @@
-const client = require('../database/connection');
-// const { sendPassword } = require('./email');
+const client = require('../database/connection'); // Adjust the path as necessary
 
-// Function to calculate distance between two points in meters
-const distanceBetweenPoints = (lat1, lon1, lat2, lon2) => {
-    const R = 6371e3; // Earth radius in meters
-    const φ1 = (lat1 * Math.PI) / 180;
-    const φ2 = (lat2 * Math.PI) / 180;
-    const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-    const Δλ = ((lon2 - lon1) * Math.PI) / 180;
 
-    const a =
-        Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-        Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+// Function to check if a location is inside the geofence
+function checkGeofence(geofence) {
+    return new Promise((resolve, reject) => {
+        // Assuming the geofence is defined as { lat, lng, radius }
+        googleMapsClient.distanceMatrix({
+            origins: [{ lat: geofence.lat, lng: geofence.lng }],
+            destinations: [{ lat: geofence.lat, lng: geofence.lng }],
+            mode: 'walking' // Use walking mode for geofence check
+        }, (err, response) => {
+            if (err) {
+                reject(err);
+            } else {
+                const distance = response.json.rows[0].elements[0].distance.value;
+                if (distance <= geofence.radius) {
+                    resolve(true); // Location is inside the geofence
+                } else {
+                    resolve(false); // Location is outside the geofence
+                }
+            }
+        });
+    });
+}
 
-    const distance = R * c; // Distance in meters
-    return distance;
+// Example usage
+const geofence = {
+    lat: 37.7749, // Latitude of the geofence center
+    lng: -122.4194, // Longitude of the geofence center
+    radius: 5000 // Radius of the geofence in meters
 };
 
-const detectDevice = async (req, res) => {
-    const data = req.body;
-    const geofenceCenter = { latitude: 13.0548, longitude: 77.7109 };
-    const geofenceRadius = 500; // in meters
-
-    const distanceToGeofence = distanceBetweenPoints(
-        data.latitude,
-        data.longitude,
-        geofenceCenter.latitude,
-        geofenceCenter.longitude
-    );
-
-    const insideGeofence = distanceToGeofence <= geofenceRadius;
-
-    if (insideGeofence) {
-        console.log(insideGeofence)
-        res.json({ status: 'Device detected inside the geofence', insideGeofence: true });
-    } else {
-        res.json({ status: 'Device not detected inside the geofence', insideGeofence: false });
-    }
-};
+checkGeofence(geofence)
+    .then(isInside => {
+        if (isInside) {
+            console.log('Some device is inside the geofence. Take action...');
+            // Trigger alert or notification for unknown device entry
+        } else {
+            console.log('No unknown devices detected inside the geofence.');
+        }
+    })
+    .catch(err => {
+        console.error('Error:', err);
+    });
 
 module.exports = {
-    detectDevice
+    checkGeofence
 };

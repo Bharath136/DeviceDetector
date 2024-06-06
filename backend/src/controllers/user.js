@@ -13,7 +13,6 @@ const userRegistration = async (req, res) => {
         password,
     } = req.body;
 
-    console.log(req.body)
     try {
         // Check if the email address already exists
         const emailCheckQuery = 'SELECT EXISTS (SELECT 1 FROM user_logins WHERE email_address = $1) AS email_exists;';
